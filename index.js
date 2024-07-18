@@ -1,13 +1,19 @@
-// 5:06:52
-const port = 4000;
-const express = require('express')
-const app = express();
+// 5:25:28
+const app = require('./app')
 const mongoose = require('mongoose');
-const jwt = require('jsonwebtoken')
-const multer = require('multer')
-const path = require('path')
-const cors = require('cors')
+const connectDB = async ()=>{
+    try{
+        await mongoose.connect('mongodb://127.0.0.1:27017/ecom');
+        console.log("Database Connected")
+    }catch(error){
+        console.log("Database is not Connected")
+        console.log(error.message)
+        process.exit(1);
+    }
+}
 
-app.use(express.json());
-app.use(cors());
-
+PORT = 4000;
+app.listen(PORT,async ()=>{
+    console.log(`server is running at http://localhost:${PORT}`);
+    await connectDB()
+});

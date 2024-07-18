@@ -1,4 +1,4 @@
-// 5:25:28
+// 5:47:28
 const app = require('./app')
 const mongoose = require('mongoose');
 const connectDB = async ()=>{

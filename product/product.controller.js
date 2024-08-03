@@ -62,6 +62,7 @@ const addProduct = async (req, res) => {
   console.log("saved");
 
   res.status(201).json({
+    success: true,
     message: "Product Created Successfully",
     product: product,
   });

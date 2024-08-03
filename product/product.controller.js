@@ -1,6 +1,6 @@
 const Product = require("./product.model");
 const cloudinary = require("../utils/cloudinary");
-
+//Upload Image
 const uploadImage = async (req, res) => {
   try {
     if (!req.files || !req.files.image) {
@@ -38,7 +38,7 @@ const uploadImage = async (req, res) => {
     res.status(500).json({ success: 0, message: "File upload failed", error });
   }
 };
-
+// Create Product
 const addProduct = async (req, res) => {
   let products = await Product.find({});
   let id;
@@ -61,13 +61,47 @@ const addProduct = async (req, res) => {
   await product.save();
   console.log("saved");
 
-  res.json({
-    success: true,
-    name: req.body.name,
+  res.status(201).json({
+    message: "Product Created Successfully",
+    product: product,
   });
+};
+
+//Delete Product
+const removeProduct = async (req, res) => {
+  try {
+    const exixtingProduct = await Product.findOneAndDelete({ id: req.body.id });
+    if (!exixtingProduct) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    console.log("Removed");
+    res.status(200).json({
+      message: "Product Deleted Successfully",
+    });
+  } catch (error) {
+    console.error("Error deleting Product:", error);
+    res.status(500).json({
+      message: "Something Went Wrong",
+      error: error.message || "Internal Server Error",
+    });
+  }
+};
+
+//Creating API for getting all products
+const allproducts = async (req, res) => {
+  try {
+    let products = await Product.find({});
+    console.log("All Product Fetched");
+    res.status(200).json(products);
+  } catch (error) {
+    console.error("Error fetching posts with author:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 };
 
 module.exports = {
   uploadImage,
   addProduct,
+  removeProduct,
+  allproducts,
 };

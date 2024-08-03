@@ -1,4 +1,4 @@
-const Product = require("../models/Product");
+const Product = require("./product.model");
 const cloudinary = require("../utils/cloudinary");
 
 const uploadImage = async (req, res) => {

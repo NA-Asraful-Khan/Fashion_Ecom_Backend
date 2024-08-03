@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const fileUpload = require("express-fileupload");
-const productRoutes = require("./routes/productRoutes");
+const productRoutes = require("./product/product.routes");
 const { notFound, errorHandler } = require("./middlewares/errorHandler");
 
 const app = express();

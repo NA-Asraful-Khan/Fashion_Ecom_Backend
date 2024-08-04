@@ -9,8 +9,7 @@ function checkAuth(req, res, next) {
   }
   try {
     const data = jwt.verify(token, "secret_ecom");
-    console.log("Decoded Token Data:", data); // Log the decoded data
-    req.user = data.user;
+    req.user = data?.user;
     next();
   } catch (error) {
     console.error("Token verification failed:", error.message);

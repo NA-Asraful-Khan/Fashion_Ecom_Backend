@@ -59,7 +59,6 @@ const login = async (req, res) => {
   try {
     // Find the user by email
     const user = await Users.findOne({ email: req.body.email });
-
     if (!user) {
       return res.status(401).json({
         message: "Invalid Credentials!",
@@ -78,7 +77,8 @@ const login = async (req, res) => {
     const jwtSecret = "secret_ecom";
     const data = {
       user: {
-        name: user.name, // Ensure consistency here
+        id: user._id,
+        name: user.name,
         email: user.email,
       },
     };

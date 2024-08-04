@@ -1,4 +1,5 @@
 const Product = require("./product.model");
+const Users = require("../user/user.model");
 const cloudinary = require("../utils/cloudinary");
 //Upload Image
 const uploadImage = async (req, res) => {
@@ -125,8 +126,46 @@ const popularWomenCollection = async (req, res) => {
 //Creating endpoint for Add to Cart
 const addToCart = async (req, res) => {
   try {
-    console.log(req.body, req?.data);
-    res.status(200).json(req.body);
+    let userData = await Users.findOne({ _id: req?.user?.id });
+    const itemId = req?.body?.itemId;
+    if (itemId !== undefined && userData?.cartData) {
+      userData.cartData[itemId] = (userData.cartData[itemId] || 0) + 1;
+    }
+    const updatedData = await Users.findOneAndUpdate(
+      { _id: req?.user?.id },
+      { cartData: userData?.cartData }
+    );
+    res.status(200).json(updatedData);
+  } catch (error) {
+    console.error("Error fetching posts with author:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+//Creating endpoint for Add to Cart
+const removeFromCart = async (req, res) => {
+  try {
+    let userData = await Users.findOne({ _id: req?.user?.id });
+    const itemId = req?.body?.itemId;
+    if (itemId !== undefined && userData?.cartData && itemId > 0) {
+      userData.cartData[itemId] = (userData.cartData[itemId] || 0) - 1;
+    }
+    const updatedData = await Users.findOneAndUpdate(
+      { _id: req?.user?.id },
+      { cartData: userData?.cartData }
+    );
+    res.status(200).json(updatedData);
+  } catch (error) {
+    console.error("Error fetching posts with author:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+//Creating endpoint for getCart
+const getCart = async (req, res) => {
+  try {
+    let userData = await Users.findOne({ _id: req?.user?.id });
+    res.status(200).json(userData?.cartData);
   } catch (error) {
     console.error("Error fetching posts with author:", error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -141,4 +180,6 @@ module.exports = {
   newCollection,
   popularWomenCollection,
   addToCart,
+  removeFromCart,
+  getCart,
 };

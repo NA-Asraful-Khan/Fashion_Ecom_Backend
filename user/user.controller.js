@@ -38,6 +38,7 @@ const signup = async (req, res) => {
     // Generate a JWT token
     const data = {
       user: {
+        name: user.name,
         email: user.email,
       },
     };
@@ -75,12 +76,13 @@ const login = async (req, res) => {
 
     // Generate JWT token
     const jwtSecret = "secret_ecom";
-    const token = jwt.sign(
-      {
+    const data = {
+      user: {
+        name: user.name, // Ensure consistency here
         email: user.email,
       },
-      jwtSecret
-    );
+    };
+    const token = jwt.sign(data, jwtSecret, { expiresIn: "1h" });
 
     res.status(200).json({
       message: "Authentication Successful!!",

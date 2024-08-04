@@ -56,10 +56,11 @@ const addProduct = async (req, res) => {
     category: req.body.category,
     new_price: req.body.new_price,
     old_price: req.body.old_price,
+    description: req.body.description,
+    tags: req.body.tags,
   });
   console.log(product);
   await product.save();
-  console.log("saved");
 
   res.status(201).json({
     success: true,
@@ -75,7 +76,6 @@ const removeProduct = async (req, res) => {
     if (!exixtingProduct) {
       return res.status(404).json({ message: "Product not found" });
     }
-    console.log("Removed");
     res.status(200).json({
       message: "Product Deleted Successfully",
     });
@@ -92,8 +92,41 @@ const removeProduct = async (req, res) => {
 const allproducts = async (req, res) => {
   try {
     let products = await Product.find({});
-    console.log("All Product Fetched");
     res.status(200).json(products);
+  } catch (error) {
+    console.error("Error fetching posts with author:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+//Creating endpoint for new collection Data
+const newCollection = async (req, res) => {
+  try {
+    let products = await Product.find({});
+    let newCollection = products.slice(0).slice(-8);
+    res.status(200).json(newCollection);
+  } catch (error) {
+    console.error("Error fetching posts with author:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+//Creating endpoint for Popular Women Data
+const popularWomenCollection = async (req, res) => {
+  try {
+    let products = await Product.find({ category: "women" });
+    let popularWomenCollection = products.slice(0, 4);
+    res.status(200).json(popularWomenCollection);
+  } catch (error) {
+    console.error("Error fetching posts with author:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+//Creating endpoint for Add to Cart
+const addToCart = async (req, res) => {
+  try {
+    console.log(req.body, req?.data);
+    res.status(200).json(req.body);
   } catch (error) {
     console.error("Error fetching posts with author:", error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -105,4 +138,7 @@ module.exports = {
   addProduct,
   removeProduct,
   allproducts,
+  newCollection,
+  popularWomenCollection,
+  addToCart,
 };

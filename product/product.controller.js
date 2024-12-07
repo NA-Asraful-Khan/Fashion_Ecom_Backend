@@ -60,7 +60,6 @@ const addProduct = async (req, res) => {
     description: req.body.description,
     tags: req.body.tags,
   });
-  console.log(product);
   await product.save();
 
   res.status(201).json({
